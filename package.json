@@ -1,0 +1,25 @@
+{
+  "name": "shoukaku",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ErrorDoc404/Shoukaku.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ErrorDoc404/Shoukaku/issues"
+  },
+  "homepage": "https://github.com/ErrorDoc404/Shoukaku#readme",
+  "dependencies": {
+    "discord.js": "^14.8",
+    "shoukaku": "^3.4.0",
+    "signale": "^1.4.0"
+  }
+}
