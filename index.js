@@ -1,4 +1,4 @@
-const MusicBot = require('./library/MusicBot');
+const MusicBot = require('./backend/class/MusicBot');
 
 const client = new MusicBot();
 

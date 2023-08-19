@@ -16,10 +16,9 @@ module.exports = {
 
     // lavalink server
     lavalink: {
-        id: "ryisgood",
-        host: '149.56.23.207',
-        port: 1311,
-        password: 'lavaserver',
+        name: 'DevamOP',
+        url: 'localhost:6000',
+        auth: 'bhosdike',
         secure: false,
     },
 
@@ -37,5 +36,8 @@ module.exports = {
         ClientID: process.env.Spotify_ClientID || "", //Spotify Client ID
         ClientSecret: process.env.Spotify_ClientSecret || "", //Spotify Client Secret
     },
+
+    serverLogs: process.env.LOGS,
+    serverId: process.env.SERVER_ID,
 
 };
