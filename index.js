@@ -1,4 +1,4 @@
-const MusicBot = require('./library/MusicBot');
+const MusicBot = require('./structures/Shoukaku');
 
 const client = new MusicBot();
 

@@ -15,65 +15,39 @@ module.exports = {
         if (!message.member.voice.channel) return message.channel.send(`❌ | **You must be in a voice channel to play something!**`);
 
         let searchString = message.content;
-        let checkNode = client.shoukaku.getNode();
 
-        // Check if the Shoukaku node is connected
-        if (!checkNode || !checkNode.connected) return message.channel.send(`❌ | **Shoukaku node not connected**`);
+        let node = client.kazagumo.shoukaku.nodes;
+
+        let state = null;
+
+        node.forEach(element => {
+            state = element.state;
+        });
+
+        if(state === 0) return message.channel.send(`❌ | **Shoukaku is not connected to any nodes!**`);
 
         // Fetch the music message from the database
         client.musicMessage[message.guild.id] = await message.channel.messages.fetch(MusicDB.musicMessageId);
 
-        const GuildData = await GuildConfig.findOne({ guildId: message.guild.id });
-        client.twentyFourSeven[message.guild.id] = GuildData.twentyFourSeven;
+        const {channel} = message.member.voice;
+        
+        if (!channel) return message.reply("You need to be in a voice channel to use this command!");
 
-        let player = client.shoukaku.getPlayer(message.guild.id);
+        let player = await client.kazagumo.createPlayer({
+            guildId: message.guild.id,
+            textId: message.channel.id,
+            voiceId: channel.id,
+            volume: 100
+        });
 
-        if (player && (!player.playing && player.voiceChannel !== message.member.voice.channel.id)) {
-            // If bot is not playing and voice channel is different, destroy the player and create a new one
-            await player.disconnect();
-            player = undefined;
-            await delay(1000);
-        }
+        let result = await client.kazagumo.search(searchString, {requester: message.author});
+        if (!result.tracks.length) return message.channel.send(`❌ | No results found!`);
 
-        if (!player || (!player.playing && player.voiceChannel === message.member.voice.channel.id)) {
-            // If player is undefined or not playing and voice channel is the same, create a new player
-            player = await client.shoukaku.joinVoiceChannel({
-                guildID: message.guild.id,
-                voiceChannelID: message.member.voice.channel.id,
-                textChannelID: message.channel.id,
-                selfDeaf: true,
-            });
-        }
+        if (result.type === "PLAYLIST") for (let track of result.tracks) player.queue.add(track);
+        else player.queue.add(result.tracks[0]);
 
-        if (!player) return message.channel.send(`❌ | **Nothing is playing right now...**`);
-        if (player.playing && player.voiceChannel !== message.member.voice.channel.id) return message.channel.send(`❌ | **You must be in the same voice channel as me to play something!**`);
-
-        try {
-            if (!player.connected) await player.connect();
-
-            let searched = await player.search(searchString, message.author);
-
-            if (searched.loadType === "NO_MATCHES") return message.channel.send(`**No matches found for -** ${searchString}`);
-            else if (searched.loadType === "PLAYLIST_LOADED") {
-                player.queue.add(searched.tracks);
-                if (!player.playing && !player.paused && player.queue.totalSize === searched.tracks.length) player.play();
-            } else {
-                player.queue.add(searched.tracks[0]);
-                if (!player.playing && !player.paused && !player.queue.size) player.play();
-            }
-
-            if (player.queue.size >= 1) client.guildQueue[message.guild.id] = player.queue.size;
-
-            if (player.queue.size === 1) {
-                content = `**[ Now Playing ]**\n${player.queue.current.title}.\n**[ ${player.queue.size} Songs in Queue ]**`;
-                client.musicMessage[message.guild.id].edit({ content: content });
-            } else if (player.queue.size > 1) {
-                content = client.musicMessage[message.guild.id].content.replace(`${player.queue.size - 1} Songs in Queue`, `${player.queue.size} Songs in Queue`);
-                client.musicMessage[message.guild.id].edit({ content: content });
-            }
-        } catch (e) {
-            message.channel.send(`**No matches found for -** ${searchString} with ${e}`);
-        }
+        if (!player.playing && !player.paused) player.play();
+        return message.channel.send({content: result.type === "PLAYLIST" ? `Queued ${result.tracks.length} from ${result.playlistName}` : `Queued ${result.tracks[0].title}`});
     }
 };
 

@@ -63,8 +63,8 @@ module.exports = {
                         inline: true,
                     },
                     {
-                        name: ":control_knobs: API Latency",
-                        value: `┕\`${client.ws.ping}ms\``,
+                        name: ":books: Library",
+                        value: `┕\`Shoukaku\``,
                         inline: true,
                     },
                     {

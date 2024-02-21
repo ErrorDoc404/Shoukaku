@@ -7,7 +7,7 @@ module.exports = {
     Admins: ["UserID", "UserID"],
     buildToken: process.env.BUILD_TOKEN || 'build token',
     Token: process.env.TOKEN || 'bot token',
-    ExpressServer: true,
+    ExpressServer: false,
     httpPort: process.env.HTTP_PORT || 'need port',
     httpsPort: process.env.HTTPS_PORT || '443',
     CallbackURL: process.env.CALLBACK_URL || '',
@@ -16,12 +16,12 @@ module.exports = {
 
     // lavalink server
     lavalink: {
-        id: "ryisgood",
-        host: '149.56.23.207',
-        port: 1311,
-        password: 'lavaserver',
-        secure: false,
+        name: "KD Lavalink",
+        url: 'node1.kartadharta.xyz:3001',
+        auth: 'kdlavalink',
     },
+
+    handlers: ['events','kazagumo','commands','music'],
 
     presence: {
         status: "idle", // online, idle, and dnd(invisible too but it make people think the bot is offline)
