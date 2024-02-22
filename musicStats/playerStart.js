@@ -11,7 +11,7 @@ module.exports.run = async (client, player, track) => {
         content = ` **[ Now Playing ]** \n${track.title}.`;
     }
     else {
-        content = `\n **[ Nothing Playing ]** \n${track.title}.\n**[ ${player.queue.length} Songs in Queue]**`;
+        content = `\n **[ Nothing Playing ]** \n${track.title}.\n**[ ${player.queue.length} Songs in Queue ]**`;
         musicMsg.edit({ content });
     }
 
